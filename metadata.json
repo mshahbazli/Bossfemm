@@ -1,0 +1,6 @@
+{
+  "name": "Scream Boss",
+  "description": "FemShield: Qadın səsi, korporativ şəffaflıq və şirkətlərin FemPS (Feminine Promoting Score) indeksi platforması.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
