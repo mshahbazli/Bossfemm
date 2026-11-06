@@ -15,17 +15,25 @@ import {
   MessageSquare,
   Activity,
   Cpu,
-  FileCheck2
+  FileCheck2,
+  Menu,
+  X,
+  UserCheck,
+  Building2
 } from 'lucide-react';
 import BenchmarkLeaderboard from './BenchmarkLeaderboard';
 import SelfHostGuideModal from './SelfHostGuideModal';
 import AnonymousTrackingModal from './AnonymousTrackingModal';
+import { CompanyInviteAuthModal } from './CompanyInviteAuthModal';
 
 export default function LandingPage() {
   const { login, lang, setLang } = useAuthStore();
   const [showSelfHost, setShowSelfHost] = useState(false);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [initialTrackToken, setInitialTrackToken] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'invite' | 'token' | 'guest' | 'leadership'>('invite');
 
   const t = translations[lang];
 
@@ -35,74 +43,151 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-slate-800 flex flex-col font-sans selection:bg-violet-100 selection:text-violet-900">
+    <div className="min-h-screen bg-[#FAFAFB] text-slate-800 flex flex-col font-sans selection:bg-violet-100 selection:text-violet-900 overflow-x-hidden">
       {/* Top Bar following Top Bar Contract: Brand wordmark - Links - Language - Primary Action */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-3 md:px-8 flex items-center justify-between gap-6 shadow-xs">
-        {/* Zone 1: Single text wordmark */}
-        <a href="/" className="flex items-center gap-2.5 text-lg font-black tracking-tight text-slate-900 whitespace-nowrap shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-violet-700 flex items-center justify-center text-white shadow-sm">
-            <Shield className="w-4 h-4 fill-white/20" />
-          </div>
-          <span>Boss<span className="text-violet-700">femm</span></span>
-        </a>
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-3 sm:gap-6">
+          {/* Zone 1: Single text wordmark */}
+          <a href="/" className="flex items-center gap-2 text-base sm:text-lg font-black tracking-tight text-slate-900 whitespace-nowrap shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-violet-700 flex items-center justify-center text-white shadow-sm">
+              <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white/20" />
+            </div>
+            <span>Boss<span className="text-violet-700">femm</span></span>
+          </a>
 
-        {/* Zone 2: Concise single-line links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-600">
-          <a href="#vault" className="hover:text-slate-900 transition-colors whitespace-nowrap shrink-0">
-            {t.nav.voiceVault}
-          </a>
-          <button 
-            onClick={() => handleOpenTracker()}
-            className="hover:text-violet-700 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 text-violet-700 font-extrabold"
-          >
-            <Key className="w-3.5 h-3.5" />
-            <span>{t.nav.trackToken}</span>
-          </button>
-          <a href="#triage" className="hover:text-slate-900 transition-colors whitespace-nowrap shrink-0">
-            {t.nav.leadershipTriage}
-          </a>
-          <a href="#security" className="hover:text-slate-900 transition-colors whitespace-nowrap shrink-0">
-            {t.landing.securityTitle}
-          </a>
-          <a href="#benchmark" className="hover:text-slate-900 transition-colors whitespace-nowrap shrink-0">
-            {t.nav.benchmark}
-          </a>
-          <button 
-            onClick={() => setShowSelfHost(true)} 
-            className="hover:text-slate-900 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 text-slate-500 font-semibold"
-          >
-            <Server className="w-3 h-3 text-emerald-600" />
-            <span>{t.nav.docker}</span>
-          </button>
-        </nav>
+          {/* Zone 2: Empty / Clean minimalist header as requested */}
+          <div className="hidden md:flex items-center gap-2"></div>
 
-        {/* Zone 3: Language Toggle Pill & Primary Action */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Language Switcher Pill */}
-          <div className="flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg text-xs font-mono font-bold">
-            <button
-              onClick={() => setLang('en')}
-              className={`px-2 py-0.5 rounded-md transition-all ${lang === 'en' ? 'bg-white text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}
-              title="English"
+          {/* Zone 3: Language Toggle Pill, Clean Company Invite/Sign In & Mobile Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Language Switcher Pill */}
+            <div className="flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-lg text-xs font-mono font-bold">
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2 py-0.5 rounded-md transition-all ${lang === 'en' ? 'bg-white text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}
+                title="English"
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLang('az')}
+                className={`px-2 py-0.5 rounded-md transition-all ${lang === 'az' ? 'bg-white text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}
+                title="Azərbaycan dili"
+              >
+                AZ
+              </button>
+            </div>
+
+            {/* Clean Primary Access Button */}
+            <Button 
+              onClick={() => { setAuthModalTab('invite'); setAuthModalOpen(true); }}
+              className="bg-violet-700 hover:bg-violet-800 text-white font-bold px-3.5 sm:px-4 py-2 text-xs rounded-xl shadow-sm whitespace-nowrap shrink-0 flex items-center gap-1.5"
             >
-              EN
-            </button>
+              <Key className="w-3.5 h-3.5" />
+              <span>{lang === 'en' ? 'Company Invite / Sign In' : 'Şirkət Dəvəti / Giriş'}</span>
+            </Button>
+
+            {/* Mobile Hamburger Button */}
             <button
-              onClick={() => setLang('az')}
-              className={`px-2 py-0.5 rounded-md transition-all ${lang === 'az' ? 'bg-white text-violet-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}
-              title="Azərbaycan dili"
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors md:hidden shrink-0"
+              aria-label="Toggle navigation menu"
             >
-              AZ
+              {mobileMenuOpen ? <X className="w-5 h-5 text-slate-900" /> : <Menu className="w-5 h-5 text-slate-900" />}
             </button>
           </div>
-
-          <Button 
-            onClick={() => login('employee')} 
-            className="bg-violet-700 hover:bg-violet-800 text-white font-bold px-4 py-2 text-xs rounded-xl shadow-sm whitespace-nowrap shrink-0"
-          >
-            {t.common.reportIssue}
-          </Button>
         </div>
+
+        {/* Mobile Navigation Drawer / SaaS Sheet */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-lg shadow-xl px-5 py-4 space-y-3 max-h-[calc(100vh-64px)] overflow-y-auto animate-fadeIn">
+            {/* Direct Zero-Knowledge Access Options */}
+            <div className="flex flex-col space-y-2">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAuthModalTab('invite');
+                  setAuthModalOpen(true);
+                }}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-violet-800 bg-violet-50 hover:bg-violet-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-lg bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                  <Key className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="block leading-tight">{lang === 'en' ? 'Join via Company Invite' : 'Şirkət Dəvəti ilə Qoşul'}</span>
+                  <span className="text-[10px] font-normal text-violet-600">{lang === 'en' ? 'Select structure & generate token' : 'Struktur seç və token əldə et'}</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAuthModalTab('token');
+                  setAuthModalOpen(true);
+                }}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="block leading-tight">{lang === 'en' ? 'Login with Token & Passcode' : 'Token və Şifrə ilə Giriş'}</span>
+                  <span className="text-[10px] font-normal text-slate-500">{lang === 'en' ? 'Permanent encrypted access' : 'Daimi şifrəli giriş'}</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAuthModalTab('guest');
+                  setAuthModalOpen(true);
+                }}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <UserCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="block leading-tight">{lang === 'en' ? 'Continue as Guest Whistleblower' : 'Qonaq kimi Davam Et'}</span>
+                  <span className="text-[10px] font-normal text-slate-500">{lang === 'en' ? 'No invite needed' : 'Dəvət kodu olmadan'}</span>
+                </div>
+              </button>
+            </div>
+
+            {/* Quick Role Preview Switcher in mobile drawer */}
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
+                {t.nav.signInAs}
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModalTab('invite');
+                    setAuthModalOpen(true);
+                  }}
+                  className="p-2.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-800 text-xs font-bold text-center border border-violet-200 transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Lock className="w-3.5 h-3.5 text-violet-700" />
+                  <span>{t.nav.employee}</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModalTab('leadership');
+                    setAuthModalOpen(true);
+                  }}
+                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold text-center border border-slate-200 transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Cpu className="w-3.5 h-3.5 text-slate-700" />
+                  <span>{t.nav.employer}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -176,7 +261,7 @@ export default function LandingPage() {
 
             <div className="pt-6 mt-6 border-t border-violet-100 flex flex-wrap items-center gap-3 relative z-10">
               <Button 
-                onClick={() => login('employee')} 
+                onClick={() => { setAuthModalTab('invite'); setAuthModalOpen(true); }} 
                 className="bg-violet-700 hover:bg-violet-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-sm gap-2"
               >
                 <span>{t.landing.dualRoleEmployeeAction}</span>
@@ -228,7 +313,7 @@ export default function LandingPage() {
 
             <div className="pt-6 mt-6 border-t border-slate-100 flex items-center gap-3 relative z-10">
               <Button 
-                onClick={() => login('employer')} 
+                onClick={() => { setAuthModalTab('leadership'); setAuthModalOpen(true); }} 
                 className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-sm gap-2"
               >
                 <span>{t.landing.dualRoleEmployerAction}</span>
@@ -413,6 +498,11 @@ export default function LandingPage() {
           onClose={() => setShowTrackingModal(false)} 
         />
       )}
+      <CompanyInviteAuthModal 
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialTab={authModalTab}
+      />
     </div>
   );
 }

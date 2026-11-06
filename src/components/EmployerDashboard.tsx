@@ -363,7 +363,7 @@ export default function EmployerDashboard() {
 
                       {/* Category Tag */}
                       <span className="font-bold text-violet-700 bg-violet-50 px-2.5 py-1 rounded-lg border border-violet-100">
-                        {alert.category}
+                        {(lang === 'en' && alert.category_en) ? alert.category_en : alert.category}
                       </span>
 
                       {/* Secret Token Tag */}
@@ -406,7 +406,7 @@ export default function EmployerDashboard() {
                       <span className="font-mono text-emerald-700 font-semibold">Zero-Knowledge Verified</span>
                     </div>
                     <p className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
-                      "{alert.text}"
+                      "{(lang === 'en' && alert.text_en) ? alert.text_en : alert.text}"
                     </p>
                   </div>
 
@@ -419,7 +419,7 @@ export default function EmployerDashboard() {
                         <span>{t.triage.aiSummaryTitle}</span>
                       </span>
                       <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                        {alert.aiExecutiveSummary || alert.text}
+                        {(lang === 'en' && alert.aiExecutiveSummary_en) ? alert.aiExecutiveSummary_en : (alert.aiExecutiveSummary || alert.text)}
                       </p>
                     </div>
 
@@ -430,26 +430,29 @@ export default function EmployerDashboard() {
                         <span>{t.triage.aiMitigationTitle}</span>
                       </span>
                       <ul className="text-xs text-slate-700 space-y-1 font-medium list-disc pl-4">
-                        {(alert.recommendedMitigationSteps && alert.recommendedMitigationSteps.length > 0) ? (
-                          alert.recommendedMitigationSteps.map((step: string, i: number) => (
+                        {(() => {
+                          const steps = (lang === 'en' && alert.recommendedMitigationSteps_en && alert.recommendedMitigationSteps_en.length > 0)
+                            ? alert.recommendedMitigationSteps_en
+                            : (alert.recommendedMitigationSteps && alert.recommendedMitigationSteps.length > 0)
+                            ? alert.recommendedMitigationSteps
+                            : ['Convene internal ethics & equality review committee'];
+                          return steps.map((step: string, i: number) => (
                             <li key={i}>{step}</li>
-                          ))
-                        ) : (
-                          <li>Convene internal ethics & equality review committee</li>
-                        )}
+                          ));
+                        })()}
                       </ul>
                     </div>
                   </div>
 
                   {/* Resolution Note if Closed */}
-                  {isResolved && alert.resolutionNote && (
+                  {isResolved && (alert.resolutionNote || alert.resolutionNote_en) && (
                     <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-1">
                       <strong className="text-emerald-950 font-bold block flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Official Corporate Resolution Documented:</span>
                       </strong>
                       <p className="text-emerald-900 font-medium leading-relaxed">
-                        {alert.resolutionNote}
+                        {(lang === 'en' && alert.resolutionNote_en) ? alert.resolutionNote_en : alert.resolutionNote}
                       </p>
                     </div>
                   )}
@@ -562,8 +565,18 @@ export default function EmployerDashboard() {
 
                       {/* Chat Messages */}
                       <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        {alert.dialogue && alert.dialogue.length > 0 ? (
-                          alert.dialogue.map((msg: any) => (
+                        {(() => {
+                          const activeDialogue = (lang === 'en' && alert.dialogue_en && alert.dialogue_en.length > 0)
+                            ? alert.dialogue_en
+                            : (alert.dialogue || []);
+                          if (activeDialogue.length === 0) {
+                            return (
+                              <p className="text-xs text-slate-400 py-2 text-center">
+                                {lang === 'en' ? 'No messages exchanged yet. Use the field below to send a confidential inquiry.' : 'Hələ heç bir mesaj mübadiləsi aparılmayıb.'}
+                              </p>
+                            );
+                          }
+                          return activeDialogue.map((msg: any) => (
                             <div 
                               key={msg.id}
                               className={`p-2.5 rounded-lg text-xs font-medium ${
@@ -576,18 +589,14 @@ export default function EmployerDashboard() {
                             >
                               <div className="flex justify-between text-[10px] opacity-75 mb-0.5">
                                 <span className="font-bold">
-                                  {msg.sender === 'leadership' ? 'Management / HR' : msg.sender === 'system' ? 'System' : 'Anonymous Employee'}
+                                  {msg.sender === 'leadership' ? (lang === 'en' ? 'Management / People Ops' : 'Rəhbərlik / HR') : msg.sender === 'system' ? 'System' : (lang === 'en' ? 'Anonymous Whistleblower' : 'Anonim Əməkdaş')}
                                 </span>
                                 <span>{msg.timestamp}</span>
                               </div>
                               <p>{msg.text}</p>
                             </div>
-                          ))
-                        ) : (
-                          <p className="text-xs text-slate-400 py-2 text-center">
-                            No messages exchanged yet. Use the field below to send a confidential inquiry.
-                          </p>
-                        )}
+                          ));
+                        })()}
                       </div>
 
                       {/* Leadership Send Input */}

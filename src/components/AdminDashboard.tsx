@@ -96,8 +96,11 @@ export default function AdminDashboard() {
                     <tr key={r.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-4 py-3 font-mono text-[10px] text-slate-400">{r.id}</td>
                       <td className="px-4 py-3"><span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">{compName}</span></td>
-                      <td className="px-4 py-3 text-slate-500 font-mono text-xs">{r.date}</td>
-                      <td className="px-4 py-3"><span className="text-violet-700 font-bold">{r.category}</span></td>
+                      <td className="px-4 py-3">
+                        <span className="text-violet-700 font-bold">
+                          {(lang === 'en' && r.category_en) ? r.category_en : r.category}
+                        </span>
+                      </td>
                       <td className="px-4 py-3">
                         {r.resolved ? (
                           <span className="text-emerald-700 font-bold text-xs">{lang === 'en' ? 'Resolved' : 'Həll Edildi'}</span>

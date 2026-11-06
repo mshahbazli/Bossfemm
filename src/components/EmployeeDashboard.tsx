@@ -107,7 +107,11 @@ export default function EmployeeDashboard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-slate-900">{user?.name || 'Anonymous Contributor'}</h1>
+              <h1 className="text-xl font-bold text-slate-900">
+                {lang === 'en'
+                  ? (user?.name_en || (user?.role === 'employee' ? 'Sarah Jenkins' : user?.name || 'Sarah Jenkins'))
+                  : (user?.name_az || (user?.role === 'employee' ? 'Mübariz Şahbazlı' : user?.name || 'Mübariz Şahbazlı'))}
+              </h1>
               {user?.verified && (
                 <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -115,9 +119,28 @@ export default function EmployeeDashboard() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-500 font-medium">
-              Zero-Knowledge Identity Protection · No IP Logging
-            </p>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 font-medium">
+              <span>Zero-Knowledge Identity Protection</span>
+              {user?.accessToken && (
+                <>
+                  <span className="text-slate-300">·</span>
+                  <span className="font-mono font-bold text-violet-700 bg-violet-50 px-2 py-0.5 rounded border border-violet-100 text-[11px]">
+                    Token: {user.accessToken}
+                  </span>
+                </>
+              )}
+              {user?.isGuest && (
+                <span className="font-mono text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded">
+                  {lang === 'en' ? 'Guest Mode' : 'Qonaq Rejimi'}
+                </span>
+              )}
+            </div>
+            {user?.department && (
+              <p className="text-xs text-slate-600 mt-1 font-medium">
+                <span className="text-slate-500">{lang === 'en' ? 'Department / Structure:' : 'Struktur / Şöbə:'}</span>{' '}
+                <span className="text-violet-700 font-bold">{user.department}</span>
+              </p>
+            )}
             {companyInfo && (
               <p className="text-xs text-slate-600 mt-1 flex items-center gap-1.5 font-medium">
                 <Building2 className="w-3.5 h-3.5 text-slate-400" />
@@ -273,7 +296,9 @@ export default function EmployeeDashboard() {
             <div key={r.id} className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-violet-700">{r.category}</span>
+                  <span className="font-bold text-violet-700">
+                    {(lang === 'en' && r.category_en) ? r.category_en : r.category}
+                  </span>
                   <span className="text-slate-300">·</span>
                   <span className="text-slate-400">{r.date}</span>
                   {r.trackingToken && (
@@ -303,13 +328,13 @@ export default function EmployeeDashboard() {
               </div>
 
               <p className="text-sm text-slate-800 leading-relaxed font-medium">
-                "{r.text}"
+                "{(lang === 'en' && r.text_en) ? r.text_en : r.text}"
               </p>
 
-              {r.resolved && r.resolutionNote && (
+              {r.resolved && (r.resolutionNote || r.resolutionNote_en) && (
                 <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600">
                   <strong className="text-slate-800 font-semibold">{t.employee.actionTaken} </strong>
-                  {r.resolutionNote}
+                  {(lang === 'en' && r.resolutionNote_en) ? r.resolutionNote_en : r.resolutionNote}
                 </div>
               )}
             </div>

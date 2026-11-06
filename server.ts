@@ -52,19 +52,48 @@ const DB: {
   users: [
     { 
       id: 'u1', 
-      name: 'Mubariz Shahbazli', 
-      email: 'mubarizshahbazli458@gmail.com',
-      linkedin: 'linkedin.com/in/mubariz',
-      avatar: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+      name: 'Sarah Jenkins', 
+      name_en: 'Sarah Jenkins',
+      name_az: 'Mübariz Şahbazlı',
+      title_en: 'Senior Staff Software Engineer',
+      title_az: 'Baş Proqram Təminatı Mühəndisi',
+      email: 'sarah.jenkins@techsolutions.io',
+      linkedin: 'linkedin.com/in/sarah-jenkins-tech',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
       companyId: 'c1', 
+      department: 'Engineering & Technology (IT)',
+      department_en: 'Engineering & Technology (IT)',
+      department_az: 'Mühəndislik və Texnologiya (IT)',
+      accessToken: 'BF-USR-79X2-ZK',
+      passcodeHash: crypto.createHash('sha256').update('secret123').digest('hex'),
       verified: true, 
       role: 'employee',
+      isGuest: false,
       workHistory: [
-        { company: 'Tech Solutions LLC', companyId: 'c1' }
+        { company: 'Tech Solutions LLC', companyId: 'c1', title: 'Senior Staff Software Engineer' }
       ]
     },
-    { id: 'a1', name: 'Admin', role: 'admin' },
-    { id: 'emp1', name: 'HR Rəhbəri (Tech Solutions)', companyId: 'c1', role: 'employer' }
+    { 
+      id: 'a1', 
+      name: 'System Administrator',
+      name_en: 'System Administrator',
+      name_az: 'Sistem Administratoru',
+      title_en: 'Platform Security & Compliance Lead',
+      title_az: 'Platforma Təhlükəsizlik və Uyğunluq Rəhbəri',
+      email: 'admin@bossfemm.org',
+      role: 'admin' 
+    },
+    { 
+      id: 'emp1', 
+      name: 'Chief People Officer / HR Lead',
+      name_en: 'Chief People Officer / HR Lead (Tech Solutions)',
+      name_az: 'HR Rəhbəri (Tech Solutions)',
+      title_en: 'Chief People & Diversity Officer',
+      title_az: 'İnsan Resursları və Bərabərlik Direktoru',
+      email: 'people@techsolutions.io',
+      companyId: 'c1', 
+      role: 'employer' 
+    }
   ],
   companies: [
     { 
@@ -127,8 +156,12 @@ const DB: {
       trackingToken: 'BF-79X-ZK9A',
       companyId: 'c1', 
       userId: 'u1', 
-      text: encrypt("Analıq məzuniyyətindən qayıtdıqdan sonra komandam mənə çevik iş saatları tanıdı və layihə rəhbərliyimi qorudu."), 
-      category: 'Analıq və Çevik Qrafik', 
+      text: encrypt("Following my return from maternity leave, my engineering team accommodated flexible core hours and preserved my project technical lead status without any career penalty."), 
+      text_en: "Following my return from maternity leave, my engineering team accommodated flexible core hours and preserved my project technical lead status without any career penalty.",
+      text_az: "Analıq məzuniyyətindən qayıtdıqdan sonra komandam mənə çevik iş saatları tanıdı və layihə rəhbərliyimi qorudu.",
+      category: 'Maternity Leave & Flexible Hours', 
+      category_en: 'Maternity Leave & Flexible Hours',
+      category_az: 'Analıq və Çevik Qrafik',
       sentiment: 'positive', 
       riskLevel: 'LOW',
       riskScore: 22,
@@ -136,13 +169,33 @@ const DB: {
       status: 'resolved',
       isVerified: true, 
       resolved: true,
-      resolutionNote: "HR tərəfindən adaptasiya proqramı rəsmiləşdirildi və layihə rəhbərliyi təsdiqləndi.",
-      aiExecutiveSummary: "Analıq məzuniyyətindən qayıdan əməkdaşın çevik iş saatları və layihə sahibliyi təmin edilib.",
+      resolutionNote: "Formal return-to-work program ratified by People Ops with leadership tenure protected.",
+      resolutionNote_en: "Formal return-to-work program ratified by People Ops with leadership tenure protected.",
+      resolutionNote_az: "HR tərəfindən adaptasiya proqramı rəsmiləşdirildi və layihə rəhbərliyi təsdiqləndi.",
+      aiExecutiveSummary: "Employee successfully re-onboarded following maternity leave with protected project leadership and core flex-hours.",
+      aiExecutiveSummary_en: "Employee successfully re-onboarded following maternity leave with protected project leadership and core flex-hours.",
+      aiExecutiveSummary_az: "Analıq məzuniyyətindən qayıdan əməkdaşın çevik iş saatları və layihə sahibliyi təmin edilib.",
       recommendedMitigationSteps: [
+        "Formalize transition schedule in the corporate HR policy portal",
+        "Maintain quarterly workload review and parity assessments"
+      ],
+      recommendedMitigationSteps_en: [
+        "Formalize transition schedule in the corporate HR policy portal",
+        "Maintain quarterly workload review and parity assessments"
+      ],
+      recommendedMitigationSteps_az: [
         "Adaptasiya qrafikinin rəsmi HR portalında qeydiyyatı",
         "Rüblük iş yükü qiymətləndirilməsinin davam etdirilməsi"
       ],
       dialogue: [
+        { id: 'm1', sender: 'employee', text: 'Thank you for supporting flexible core hours; it has made a tremendous positive impact on our project milestones.', timestamp: '2026-04-21 14:30' },
+        { id: 'm2', sender: 'leadership', text: 'Your technical ownership and leadership are highly valued across our engineering teams. Formal policy approval has been issued.', timestamp: '2026-04-22 09:15' }
+      ],
+      dialogue_en: [
+        { id: 'm1', sender: 'employee', text: 'Thank you for supporting flexible core hours; it has made a tremendous positive impact on our project milestones.', timestamp: '2026-04-21 14:30' },
+        { id: 'm2', sender: 'leadership', text: 'Your technical ownership and leadership are highly valued across our engineering teams. Formal policy approval has been issued.', timestamp: '2026-04-22 09:15' }
+      ],
+      dialogue_az: [
         { id: 'm1', sender: 'employee', text: 'Çevik qrafik üçün təşəkkür edirəm, layihə gedişatına müsbət təsir edir.', timestamp: '2026-04-21 14:30' },
         { id: 'm2', sender: 'leadership', text: 'Sizin komandadakı rolunuz yüksək qiymətləndirilir. Rəsmi təsdiq göndərildi.', timestamp: '2026-04-22 09:15' }
       ],
@@ -153,8 +206,12 @@ const DB: {
       trackingToken: 'BF-34K-PAY2',
       companyId: 'c1', 
       userId: 'u1', 
-      text: encrypt("Mühəndislik komandasında eyni dərəcəli kişi həmkarlarımızla maaş fərqinin olub-olmaması ilə bağlı audit aparılmasını istəyirik."), 
-      category: 'Maaş Bərabərliyi (Equal Pay)', 
+      text: encrypt("Requesting an independent compensation parity audit across L4/L5 engineering bands to verify no unadjusted gender pay gap exists."), 
+      text_en: "Requesting an independent compensation parity audit across L4/L5 engineering bands to verify no unadjusted gender pay gap exists.",
+      text_az: "Mühəndislik komandasında eyni dərəcəli kişi həmkarlarımızla maaş fərqinin olub-olmaması ilə bağlı audit aparılmasını istəyirik.",
+      category: 'Equal Pay & Compensation Parity', 
+      category_en: 'Equal Pay & Compensation Parity',
+      category_az: 'Maaş Bərabərliyi (Equal Pay)',
       sentiment: 'neutral', 
       riskLevel: 'HIGH',
       riskScore: 78,
@@ -162,13 +219,33 @@ const DB: {
       status: 'action_plan_active',
       isVerified: true, 
       resolved: false,
-      resolutionNote: "2026-cı il üçün müstəqil əmək haqqı bərabərliyi auditi təyin olundu.",
-      aiExecutiveSummary: "Mühəndislik komandasında dərəcə üzrə maaş bərabərliyi auditi tələbi irəli sürülüb. Riskin vaxtında aradan qaldırılması tövsiyə olunur.",
+      resolutionNote: "Independent 2026 compensation parity audit commissioned with external advisory firm.",
+      resolutionNote_en: "Independent 2026 compensation parity audit commissioned with external advisory firm.",
+      resolutionNote_az: "2026-cı il üçün müstəqil əmək haqqı bərabərliyi auditi təyin olundu.",
+      aiExecutiveSummary: "Engineering cohort petition for grade-level compensation parity audit. Proactive mitigation recommended to safeguard retention.",
+      aiExecutiveSummary_en: "Engineering cohort petition for grade-level compensation parity audit. Proactive mitigation recommended to safeguard retention.",
+      aiExecutiveSummary_az: "Mühəndislik komandasında dərəcə üzrə maaş bərabərliyi auditi tələbi irəli sürülüb. Riskin vaxtında aradan qaldırılması tövsiyə olunur.",
       recommendedMitigationSteps: [
+        "Engage external independent compensation advisory audit firm",
+        "Publish transparent, level-by-level salary bands across engineering"
+      ],
+      recommendedMitigationSteps_en: [
+        "Engage external independent compensation advisory audit firm",
+        "Publish transparent, level-by-level salary bands across engineering"
+      ],
+      recommendedMitigationSteps_az: [
         "Kənar müstəqil kompensasiya auditi şirkətinin cəlb edilməsi",
         "Dərəcələr üzrə maaş diapazonunun (bands) şəffaflaşdırılması"
       ],
       dialogue: [
+        { id: 'm3', sender: 'leadership', text: 'Your escalation has been logged by the People Operations committee. Independent RFP for compensation audit is underway.', timestamp: '2026-04-26 11:00' },
+        { id: 'm4', sender: 'employee', text: 'Please ensure L4 and L5 engineering levels are explicitly included in the audit scope.', timestamp: '2026-04-27 16:45' }
+      ],
+      dialogue_en: [
+        { id: 'm3', sender: 'leadership', text: 'Your escalation has been logged by the People Operations committee. Independent RFP for compensation audit is underway.', timestamp: '2026-04-26 11:00' },
+        { id: 'm4', sender: 'employee', text: 'Please ensure L4 and L5 engineering levels are explicitly included in the audit scope.', timestamp: '2026-04-27 16:45' }
+      ],
+      dialogue_az: [
         { id: 'm3', sender: 'leadership', text: 'Müraciətiniz qəbul edildi. Müstəqil audit üçün şirkət seçimi aparılır.', timestamp: '2026-04-26 11:00' },
         { id: 'm4', sender: 'employee', text: 'Zəhmət olmasa L4 və L5 mühəndis pillələrinin xüsusilə diqqətdə saxlanmasını təmin edin.', timestamp: '2026-04-27 16:45' }
       ],
@@ -179,8 +256,12 @@ const DB: {
       trackingToken: 'BF-91M-SAFE',
       companyId: 'c1', 
       userId: 'u1', 
-      text: encrypt("Rəhbər vəzifələrə irəli çəkilmə mərhələsində qadın mühəndislər üçün mentorluq imkanları artırılmalıdır. Rəhbərlikdə şüşə tavan hiss olunur."), 
-      category: 'Karyera və Rəhbərlik İmkanları', 
+      text: encrypt("Women engineers encounter an informal glass ceiling during technical lead and executive promotions. Transparent promotion rubrics and executive sponsorship are required."), 
+      text_en: "Women engineers encounter an informal glass ceiling during technical lead and executive promotions. Transparent promotion rubrics and executive sponsorship are required.",
+      text_az: "Rəhbər vəzifələrə irəli çəkilmə mərhələsində qadın mühəndislər üçün mentorluq imkanları artırılmalıdır. Rəhbərlikdə şüşə tavan hiss olunur.",
+      category: 'Executive Glass Ceiling & Promotion Parity', 
+      category_en: 'Executive Glass Ceiling & Promotion Parity',
+      category_az: 'Karyera və Rəhbərlik İmkanları',
       sentiment: 'neutral', 
       riskLevel: 'CRITICAL',
       riskScore: 89,
@@ -189,13 +270,33 @@ const DB: {
       isVerified: true, 
       resolved: false,
       resolutionNote: "",
-      aiExecutiveSummary: "Rəhbərlik pillələrində qadınlar üçün şüşə tavan və qeyri-rəsmi kənarda qalma riski aşkarlanıb. Təcili sponsorluq mexanizmi tələb olunur.",
+      resolutionNote_en: "",
+      resolutionNote_az: "",
+      aiExecutiveSummary: "Apparent promotional barrier for senior women engineers identified. Immediate executive sponsorship and anti-retaliation safeguard mandated.",
+      aiExecutiveSummary_en: "Apparent promotional barrier for senior women engineers identified. Immediate executive sponsorship and anti-retaliation safeguard mandated.",
+      aiExecutiveSummary_az: "Rəhbərlik pillələrində qadınlar üçün şüşə tavan və qeyri-rəsmi kənarda qalma riski aşkarlanıb. Təcili sponsorluq mexanizmi tələb olunur.",
       recommendedMitigationSteps: [
+        "Establish formal Board & Executive sponsorship framework for women engineers",
+        "Deploy standardized, objective promotion criteria rubric",
+        "Activate strict anti-retaliation monitoring protocol"
+      ],
+      recommendedMitigationSteps_en: [
+        "Establish formal Board & Executive sponsorship framework for women engineers",
+        "Deploy standardized, objective promotion criteria rubric",
+        "Activate strict anti-retaliation monitoring protocol"
+      ],
+      recommendedMitigationSteps_az: [
         "İdarə heyəti səviyyəsində qadın rəhbərlər üçün mentorluq proqramının başladılması",
         "Vəzifə yüksəlişi meyarlarının obyektiv qiymətləndirmə matrisi ilə təmin edilməsi",
         "Retaliation (qisasçılıq) əleyhinə təhlükəsizlik protokolunun aktivləşdirilməsi"
       ],
       dialogue: [
+        { id: 'm5', sender: 'leadership', text: 'Executive Ethics Committee has taken ownership of this confidential ticket. Can you confirm if this pertains to platform infrastructure or product engineering?', timestamp: '2026-04-29 08:30' }
+      ],
+      dialogue_en: [
+        { id: 'm5', sender: 'leadership', text: 'Executive Ethics Committee has taken ownership of this confidential ticket. Can you confirm if this pertains to platform infrastructure or product engineering?', timestamp: '2026-04-29 08:30' }
+      ],
+      dialogue_az: [
         { id: 'm5', sender: 'leadership', text: 'İdarə heyəti etik komissiyası müraciəti qeydə aldı. Şöbə qrupunu anonim olaraq təsdiqləyə bilərsinizmi?', timestamp: '2026-04-29 08:30' }
       ],
       date: '2026-04-28' 
@@ -492,11 +593,98 @@ app.post('/api/auth/manual-register', (req, res) => {
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { role } = req.body;
-  // Simple mock login just to switch roles easily in the preview
-  if (role === 'admin') return res.json(DB.users[1]);
-  if (role === 'employer') return res.json(DB.users[2]);
-  return res.json(DB.users[0]);
+  const { role, lang } = req.body;
+  let targetUser = DB.users[0];
+  if (role === 'admin') targetUser = DB.users[1];
+  else if (role === 'employer') targetUser = DB.users[2];
+  else targetUser = DB.users[0];
+
+  const localizedName = lang === 'az' ? targetUser.name_az : (targetUser.name_en || targetUser.name);
+  return res.json({
+    ...targetUser,
+    name: localizedName
+  });
+});
+
+// Zero-Knowledge Company Invite Registration
+app.post('/api/auth/invite-register', (req, res) => {
+  const { companyId, department, passcodeHash, lang } = req.body;
+  if (!companyId || !passcodeHash) {
+    return res.status(400).json({ error: 'Company and passcode hash are required' });
+  }
+
+  const p1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const p2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const accessToken = `BF-USR-${p1}-${p2}`;
+
+  const comp = DB.companies.find(c => c.id === companyId);
+  const companyName = comp ? comp.name : 'Tech Solutions LLC';
+
+  const newUser = {
+    id: 'u_' + Date.now(),
+    accessToken,
+    passcodeHash,
+    name: lang === 'az' ? 'Anonim Əməkdaş' : 'Anonymous Employee',
+    name_en: 'Anonymous Employee',
+    name_az: 'Anonim Əməkdaş',
+    title_en: department || 'Verified Contributor',
+    title_az: department || 'Təsdiqli Əməkdaş',
+    companyId,
+    department: department || 'General',
+    verified: true, // verified through corporate invite token
+    role: 'employee',
+    isGuest: false,
+    workHistory: [{ company: companyName, companyId, title: department || 'Contributor' }]
+  };
+
+  DB.users.push(newUser);
+  res.json({ success: true, accessToken, user: newUser });
+});
+
+// Zero-Knowledge Token & Passcode Login
+app.post('/api/auth/token-login', (req, res) => {
+  const { accessToken, passcodeHash, lang } = req.body;
+  if (!accessToken || !passcodeHash) {
+    return res.status(400).json({ error: 'Token and passcode are required' });
+  }
+
+  const normalized = accessToken.trim().toUpperCase();
+  const user = DB.users.find(u => u.accessToken?.toUpperCase() === normalized);
+
+  if (!user) {
+    return res.status(404).json({ error: lang === 'az' ? 'Açar (Token) tapılmadı' : 'Access Token not found' });
+  }
+
+  if (user.passcodeHash && user.passcodeHash !== passcodeHash) {
+    return res.status(401).json({ error: lang === 'az' ? 'Şifrə yanlışdır' : 'Invalid master passcode' });
+  }
+
+  const localizedName = lang === 'az' ? (user.name_az || user.name) : (user.name_en || user.name);
+  res.json({
+    ...user,
+    name: localizedName
+  });
+});
+
+// Guest Whistleblower Session Login
+app.post('/api/auth/guest-login', (req, res) => {
+  const { companyId, lang } = req.body;
+  const guestUser = {
+    id: 'guest_' + Date.now(),
+    accessToken: 'GUEST-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
+    name: lang === 'az' ? 'Qonaq İştirakçı (Guest)' : 'Guest Contributor',
+    name_en: 'Guest Contributor',
+    name_az: 'Qonaq İştirakçı',
+    title_en: 'Guest Whistleblower',
+    title_az: 'Qonaq Əməkdaş',
+    companyId: companyId || 'c1',
+    verified: false,
+    role: 'employee',
+    isGuest: true,
+    workHistory: []
+  };
+
+  res.json(guestUser);
 });
 
 app.get('/api/auth/linkedin/url', (req, res) => {
@@ -933,7 +1121,17 @@ app.get('/api/reviews/me/:userId', (req, res) => {
     .filter(r => r.userId === userId)
     .map(r => ({
       ...r,
-      text: decrypt(r.text)
+      text: decrypt(r.text),
+      text_en: r.text_en,
+      text_az: r.text_az,
+      category_en: r.category_en,
+      category_az: r.category_az,
+      resolutionNote_en: r.resolutionNote_en,
+      resolutionNote_az: r.resolutionNote_az,
+      aiExecutiveSummary_en: r.aiExecutiveSummary_en,
+      aiExecutiveSummary_az: r.aiExecutiveSummary_az,
+      dialogue_en: r.dialogue_en,
+      dialogue_az: r.dialogue_az
     }));
   res.json(myReviews);
 });
@@ -1197,16 +1395,28 @@ app.get('/api/reviews/track/:token', (req, res) => {
     companyName: company?.name || 'Company',
     companyLogo: company?.logo || '🏢',
     text: decrypt(ticket.text),
+    text_en: ticket.text_en,
+    text_az: ticket.text_az,
     category: ticket.category,
+    category_en: ticket.category_en,
+    category_az: ticket.category_az,
     riskLevel: ticket.riskLevel || 'MEDIUM',
     riskScore: ticket.riskScore || 50,
     slaHours: ticket.slaHours || 72,
     status: ticket.status || (ticket.resolved ? 'resolved' : 'ai_triaged'),
     resolved: ticket.resolved,
     resolutionNote: ticket.resolutionNote,
+    resolutionNote_en: ticket.resolutionNote_en,
+    resolutionNote_az: ticket.resolutionNote_az,
     aiExecutiveSummary: ticket.aiExecutiveSummary,
+    aiExecutiveSummary_en: ticket.aiExecutiveSummary_en,
+    aiExecutiveSummary_az: ticket.aiExecutiveSummary_az,
     recommendedMitigationSteps: ticket.recommendedMitigationSteps || [],
+    recommendedMitigationSteps_en: ticket.recommendedMitigationSteps_en || [],
+    recommendedMitigationSteps_az: ticket.recommendedMitigationSteps_az || [],
     dialogue: ticket.dialogue || [],
+    dialogue_en: ticket.dialogue_en || [],
+    dialogue_az: ticket.dialogue_az || [],
     date: ticket.date
   });
 });
@@ -1255,6 +1465,18 @@ app.get('/api/employer/triage-alerts', (req, res) => {
   const decryptedList = companyTickets.map(r => ({
     ...r,
     text: decrypt(r.text),
+    text_en: r.text_en,
+    text_az: r.text_az,
+    category_en: r.category_en,
+    category_az: r.category_az,
+    resolutionNote_en: r.resolutionNote_en,
+    resolutionNote_az: r.resolutionNote_az,
+    aiExecutiveSummary_en: r.aiExecutiveSummary_en,
+    aiExecutiveSummary_az: r.aiExecutiveSummary_az,
+    recommendedMitigationSteps_en: r.recommendedMitigationSteps_en || [],
+    recommendedMitigationSteps_az: r.recommendedMitigationSteps_az || [],
+    dialogue_en: r.dialogue_en || [],
+    dialogue_az: r.dialogue_az || [],
     riskLevel: r.riskLevel || 'MEDIUM',
     riskScore: r.riskScore || 50,
     status: r.status || (r.resolved ? 'resolved' : 'ai_triaged'),

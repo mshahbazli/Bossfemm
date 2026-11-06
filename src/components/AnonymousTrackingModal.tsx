@@ -268,7 +268,7 @@ export default function AnonymousTrackingModal({ initialToken = '', onClose }: A
                   <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
                     <span className="text-slate-500 font-medium">{t.tracking.aiCategory}</span>
                     <span className="font-bold text-violet-700 bg-violet-50 px-2 py-0.5 rounded border border-violet-100">
-                      {ticketData.category}
+                      {(lang === 'en' && ticketData.category_en) ? ticketData.category_en : ticketData.category}
                     </span>
                   </div>
 
@@ -300,17 +300,17 @@ export default function AnonymousTrackingModal({ initialToken = '', onClose }: A
                     <span>{t.tracking.executiveSummary}</span>
                   </div>
                   <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    "{ticketData.aiExecutiveSummary || ticketData.text}"
+                    "{(lang === 'en' && ticketData.aiExecutiveSummary_en) ? ticketData.aiExecutiveSummary_en : (ticketData.aiExecutiveSummary || ticketData.text)}"
                   </p>
 
-                  {ticketData.resolved && ticketData.resolutionNote && (
+                  {ticketData.resolved && (ticketData.resolutionNote || ticketData.resolutionNote_en) && (
                     <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg space-y-1">
                       <span className="text-[11px] font-bold text-emerald-900 block flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                         {t.tracking.remedialActionTaken}
                       </span>
                       <p className="text-xs text-emerald-800 font-medium leading-relaxed">
-                        {ticketData.resolutionNote}
+                        {(lang === 'en' && ticketData.resolutionNote_en) ? ticketData.resolutionNote_en : ticketData.resolutionNote}
                       </p>
                     </div>
                   )}
@@ -334,8 +334,18 @@ export default function AnonymousTrackingModal({ initialToken = '', onClose }: A
 
                 {/* Messages Feed */}
                 <div className="p-4 space-y-3 max-h-60 overflow-y-auto bg-slate-50/50">
-                  {ticketData.dialogue && ticketData.dialogue.length > 0 ? (
-                    ticketData.dialogue.map((msg: any) => (
+                  {(() => {
+                    const activeDialogue = (lang === 'en' && ticketData.dialogue_en && ticketData.dialogue_en.length > 0)
+                      ? ticketData.dialogue_en
+                      : (ticketData.dialogue || []);
+                    if (activeDialogue.length === 0) {
+                      return (
+                        <p className="text-xs text-slate-400 text-center py-3">
+                          {lang === 'en' ? 'No dialogue exchange initiated yet.' : 'Hələ heç bir dialoq mesajı göndərilməyib.'}
+                        </p>
+                      );
+                    }
+                    return activeDialogue.map((msg: any) => (
                       <div 
                         key={msg.id}
                         className={`flex flex-col ${
@@ -360,7 +370,9 @@ export default function AnonymousTrackingModal({ initialToken = '', onClose }: A
                           >
                             <div className="flex items-center justify-between gap-3 text-[10px] opacity-75">
                               <span className="font-bold">
-                                {msg.sender === 'employee' ? 'You (Anonymous)' : 'Corporate Leadership / HR'}
+                                {msg.sender === 'employee' 
+                                  ? (lang === 'en' ? 'You (Anonymous Employee)' : 'Siz (Anonim Əməkdaş)')
+                                  : (lang === 'en' ? 'Corporate Leadership / HR' : 'Şirkət Rəhbərliyi / HR')}
                               </span>
                               <span>{msg.timestamp}</span>
                             </div>
@@ -368,12 +380,8 @@ export default function AnonymousTrackingModal({ initialToken = '', onClose }: A
                           </div>
                         )}
                       </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-slate-400 text-center py-3">
-                      No dialogue exchange initiated yet.
-                    </p>
-                  )}
+                    ));
+                  })()}
                 </div>
 
                 {/* Reply Form */}

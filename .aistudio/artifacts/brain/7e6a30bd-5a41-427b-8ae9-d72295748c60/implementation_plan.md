@@ -1,68 +1,87 @@
-# Bossfemm: Architecture Realignment Plan — Anonymous Encrypted Voice, AI Alert Triage & Leadership Resolution Lifecycle
+# Bossfemm: Sample User Profiles & Bilingual Seed Data Localization
 
-## 1. Executive Summary & Core Objective
-Based on user feedback, the primary value proposition of **Bossfemm** is shifting from a score-first directory to an **end-to-end encrypted anonymous whistleblowing and corporate resolution engine**:
-- **Primary Pillar 1 (Zero-Knowledge Voice Vault)**: Employees report workplace challenges, bias, pay gaps, and harassment with client-side Web Crypto AES-GCM/RSA encryption, zero trace, zero metadata retention, and an anonymous cryptographic tracking token (`Secret Receipt Key`).
-- **Primary Pillar 2 (Direct Categorized AI Alert Triage & Risk Escalation)**: The AI Agent automatically screens, decrypts on-the-fly inside secure enclaves, classifies into standard DEI/HR categories, computes a real-time Risk Escalation Score (Critical, High, Medium, Low), checks policy compliance, and routes prioritized alerts directly to company leadership.
-- **Primary Pillar 3 (Executive Resolution Hub & Anonymous 2-Way Dialogue)**: Corporate leadership manages issues through an active Kanban triage with status lifecycles (`Reported & Encrypted` -> `AI Triaged & Escalated` -> `Leadership Assigned` -> `Action Plan Active` -> `Resolution Verified`). Leadership can communicate back to the anonymous employee via the cryptographic token channel without ever revealing their identity.
-- **Secondary Role (FemPS Index)**: The Feminen Promoting Score (FemPS) is repositioned as a secondary, aggregated corporate health benchmark derived directly from resolution velocity, psychological safety, and leadership accountability.
+## Executive Summary
+This update fully localizes all mock user accounts (Employee, HR Leader, System Administrator), sample anonymous employee whistleblowing tickets, AI triage assessments, and two-way leadership dialogue threads into high-standard English (DEI & Equal Pay terminology) while seamlessly maintaining Azerbaijani when the language toggle is switched to `AZ`.
 
 ---
 
-## 2. Proposed Changes & Architecture Breakdown
+## User Review & Confirmed Choices
 
-### A. Homepage & Dual-Role Hero Architecture (`src/components/LandingPage.tsx`)
-- **Dual-Role Hero Experience**:
-  - Split interactive hero spotlighting the two core portals:
-    1. **For Women & Employees**: *"Secure Anonymous Voice Vault"* — 100% confidential reporting, Zero-Knowledge client-side encryption, private tracking receipt.
-    2. **For Corporate Leadership**: *"AI Alert Triage & Resolution Hub"* — Direct categorized escalation, automated risk grading, compliant resolution workflows.
-- **Interactive Encryption & Anonymity Explainer**:
-  - Visual breakdown of the Zero-Knowledge cryptographic barrier: Client-side AES-GCM 256-bit + RSA public key exchange -> Zero IP/Browser Fingerprinting -> AI Agent Enclave Processing -> Secure Leadership Delivery.
-- **Repositioning FemPS Section**:
-  - Move the FemPS Benchmark from primary focus to a dedicated "Corporate Benchmark & Transparency" tab and secondary section explaining how resolution efficiency feeds into the company's FemPS score.
-
-### B. Anonymous Submission & Secret Receipt Token Engine (`src/components/EmployeeDashboard.tsx`, `PersonalFeedbackForm.tsx`)
-- **Client-Side Cryptographic Token Generation**:
-  - On submission, generate a unique Base58/Hex cryptographic tracking key (e.g., `BF-79X-ZK9A`) stored only with the employee.
-- **Anonymous Tracking & Dialogue Portal**:
-  - Add a "Track My Issue" tab where employees can enter their Secret Receipt Key without any login or account creation.
-  - View real-time status of their report: `Encrypted Queue` -> `AI Escalated to Leadership` -> `Investigation & Action Plan` -> `Resolved`.
-  - Secure two-way anonymous messaging: Leadership can post official status updates or ask non-identifying clarifying questions (e.g., "HR has scheduled an independent pay audit; would you like to review the audit scope?"), and the employee can reply anonymously.
-
-### C. Direct Categorized AI Alert Triage & Risk Escalation (`server.ts`, `src/components/EmployerDashboard.tsx`)
-- **Backend AI Pipeline & Risk Escalation Engine**:
-  - Update Gemini AI analysis prompt to compute:
-    1. `category`: Pay Disparity & Promotion, Harassment & Hostile Environment, Maternity & Caregiver Bias, Leadership Glass Ceiling, Retaliation Concerns.
-    2. `riskLevel`: `CRITICAL` (Urgent legal/safety escalation, 24h SLA), `HIGH` (Systemic bias, 72h SLA), `MEDIUM` (Process/policy friction), `LOW` (Cultural suggestion).
-    3. `riskScore`: Numeric score 1–100.
-    4. `aiExecutiveSummary`: 2-sentence non-identifying briefing for executive board.
-    5. `recommendedMitigationSteps`: Concrete corporate actions.
-- **Leadership Dashboard UX Overhaul**:
-  - Priority Alert Feed with color-coded risk tags, urgent escalation indicators, and SLA countdowns.
-  - Active Lifecycle Stage Management: One-click status progression (`Triaged` -> `In Progress` -> `Remediation Deployed` -> `Closed`).
-  - Anonymous Thread Console: Send encrypted updates directly to the employee's tracking token.
-  - Impact on FemPS: Live preview showing how timely resolution improves the company's quarterly FemPS rating.
-
-### D. Open-Source Benchmark & Badge (`src/components/BenchmarkLeaderboard.tsx`, `BadgeModal.tsx`)
-- Keep the verified FemPS leaderboard and SVG embed badge as a public corporate incentive, clearly explaining: *"FemPS reflects genuine resolution speed, employee psychological safety, and verified equity practices."*
-
-### E. Full Bilingual Coverage (`src/i18n.ts`)
-- Seamless English (default) and Azerbaijani translation for all new components:
-  - Cryptographic token terminology, tracking interface, AI risk triage headers, executive action buttons, and anonymous dialogue threads.
+> [!IMPORTANT]
+> The following requirements have been confirmed via interactive clarification:
+> - **All Mock Accounts & Personas**: Employee, HR Leadership, and Admin roles will have internationalized English titles and personas (`Sarah Jenkins / Staff Software Engineer`, `Chief People Officer / HR Lead`, `System Administrator`).
+> - **Bilingual Seed Tickets & Dialogue**: All sample employee reviews, AI risk analysis summaries, mitigation steps, and leadership message threads will dynamically render in English or Azerbaijani based on the active language switcher.
 
 ---
 
-## 3. Verification & Testing Plan
-1. **Compilation & Type Safety**:
-   - Run `lint_applet` and `compile_applet` to ensure zero TypeScript errors or missing imports.
-2. **Anonymous Submission & Token Test**:
-   - Submit an encrypted issue from the Employee Voice Vault.
-   - Verify that a Secret Receipt Key is generated.
-   - Paste the token into the "Track Issue" tab and confirm full status visibility and anonymous reply functionality.
-3. **AI Triage & Escalation Test**:
-   - Verify risk escalation tags (Critical / High / Medium), automated category sorting, and executive mitigation recommendations in the Employer Dashboard.
-4. **Resolution Tracking & FemPS Calculation**:
-   - Update issue status to `Resolved` with resolution notes in the Leadership Hub.
-   - Verify that the company's resolution rate and FemPS index dynamically update.
-5. **Language Switch**:
-   - Toggle EN/AZ across the new dual-role landing page, tracking modal, and triage board.
+## 1. Overview & Core Concept
+
+- **What It Does**:
+  - Provides natural, professional English personas and sample whistleblowing cases reflecting real-world corporate DEI scenarios (maternity leave transition, equal pay audit, promotion glass ceiling).
+  - Keeps all mock data synchronized with the active language switcher (`EN` default / `AZ` toggle).
+- **Target Audience**:
+  - Global enterprise compliance teams, HR leaders, and employees evaluating Bossfemm's confidential reporting and AI triage workflows in English.
+
+---
+
+## 2. User Experience & Visual Design
+
+- **Navigation & Role Switcher Header**:
+  - When in `EN`: Shows `Sarah Jenkins (Senior Staff Engineer)`, `Chief People Officer (Tech Solutions)`, `System Administrator`.
+  - When in `AZ`: Shows `Mübariz Şahbazlı (Baş Mühəndis)`, `HR Rəhbəri (Tech Solutions)`, `Sistem Administratoru`.
+- **Anonymous Tracking Ticket Modal & Dialogue Threads**:
+  - When opening demo tokens (`BF-79X-ZK9A`, `BF-34K-PAY2`, `BF-91M-SAFE`), the ticket text, AI executive summary, mitigation recommendations, and chat bubble dialogue seamlessly display in English with verified DEI terminology.
+- **Leadership Alert Triage Kanban**:
+  - Priority alerts display English category badges (`Equal Pay Audit`, `Maternity & Flexible Hours`, `Executive Glass Ceiling & Promotion`) with English SLA indicators (`72h SLA`, `24h Critical SLA`).
+
+---
+
+## 3. Key Product Decisions & Trade-Offs
+
+- **Bilingual Dual-Field Seed Structure vs. Separate Databases**:
+  - *Chosen Approach*: Store both `en` and `az` fields on review documents, user profiles, and dialogue messages (e.g. `text_en`, `text_az`, `aiExecutiveSummary_en`, `aiExecutiveSummary_az`, `dialogue_en`, `dialogue_az`).
+  - *Why*: Enables instant, flicker-free switching between English and Azerbaijani using the existing client-side `lang` state without requiring page reload or separate database instances.
+
+---
+
+## 4. Technical Architecture & Component Mapping
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Bossfemm Applet                           │
+│  useAuthStore (lang: 'en' | 'az') ── Top Navigation Bar       │
+└───────────────────────────────┬──────────────────────────────┘
+                                │
+        ┌───────────────────────┴───────────────────────┐
+        ▼                                               ▼
+┌─────────────────────────────────┐   ┌──────────────────────────────────┐
+│  Employee Portal & Tracking     │   │  Leadership Alert Triage Hub     │
+│  - Sarah Jenkins (EN) /         │   │  - Chief People Officer (EN) /   │
+│    Mübariz Şahbazlı (AZ)        │   │    HR Rəhbəri (AZ)               │
+│  - English & AZ encrypted r1/r2 │   │  - AI Risk Escalation in EN/AZ   │
+│  - 2-Way Anonymous Dialogue     │   │  - Action Plan & SLA in EN/AZ    │
+└─────────────────────────────────┘   └──────────────────────────────────┘
+```
+
+### Components to Update:
+1. `server.ts`:
+   - Add bilingual user metadata (`name_en`, `name_az`, `title_en`, `title_az`, `workHistory_en`, `workHistory_az`).
+   - Add bilingual fields for `r1`, `r2`, `r3` in `DB.reviews` (English text, categories, AI executive summaries, mitigation steps, and dialogue arrays).
+2. `src/components/AnonymousTrackingModal.tsx`:
+   - Render localized ticket descriptions, status notes, AI recommendations, and chat messages based on `lang === 'en'`.
+3. `src/components/EmployerDashboard.tsx`:
+   - Render localized categories, employee issue descriptions, and dialogue messages in the leadership triage feed.
+4. `src/components/EmployeeDashboard.tsx`:
+   - Display English user profile info, mock company title, and sample submission history.
+5. `src/App.tsx`:
+   - Render localized role titles in the header and mobile navigation drawer.
+
+---
+
+## 5. Verification Plan
+1. **Compilation & Type Check**:
+   - Run `lint_applet` and `compile_applet` to confirm zero TypeScript errors.
+2. **Language Switch Verification**:
+   - Toggle between `EN` and `AZ` in the top bar.
+   - Verify sample users (`Sarah Jenkins` in EN vs `Mübariz Şahbazlı` in AZ; `Chief People Officer` in EN vs `HR Rəhbəri` in AZ).
+   - Open the Secret Receipt Key tracker and check demo tokens (`BF-79X-ZK9A`, `BF-34K-PAY2`, `BF-91M-SAFE`) to confirm all ticket texts, AI summaries, and two-way dialogues render in professional English.
