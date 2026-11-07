@@ -22,7 +22,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - AES_256_MASTER_KEY=\${AES_256_MASTER_KEY} # 32-byte hex for zero-knowledge encryption
-      - GEMINI_API_KEY=\${GEMINI_API_KEY}         # For AI policy & sentiment audit
+      - ANTHROPIC_API_KEY=\${ANTHROPIC_API_KEY}   # For AI policy & sentiment audit
       - SELF_HOSTED_MODE=true
       - COMPANY_NAME="Your Organization"
     volumes:
@@ -89,7 +89,7 @@ volumes:
               </h4>
               <p className="text-xs text-slate-500">
                 {lang === 'en'
-                  ? 'Gemini AI evaluates internal employee handbooks and calculates real-time FemPS scores.'
+                  ? 'Claude AI evaluates internal employee handbooks and calculates real-time FemPS scores.'
                   : 'AI Siyasət Auditi daxili təlimat və HR sənədlərini avtomatik FemPS xalına çevirir.'}
               </p>
             </div>

@@ -1,22 +1,28 @@
-import { GoogleGenAI } from '@google/genai';
+import 'dotenv/config';
+import Anthropic from '@anthropic-ai/sdk';
 
 async function main() {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: "Hello world, what category is this: 'Maaşım azdır'",
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: 'OBJECT',
-          properties: {
-            category: { type: 'STRING' }
-          }
-        }
-      }
+    const ai = new Anthropic();
+    const response = await ai.messages.create({
+      model: process.env.ANTHROPIC_MODEL || 'claude-opus-5-5',
+      max_tokens: 16000,
+      output_config: {
+        effort: 'low',
+        format: {
+          type: 'json_schema',
+          schema: {
+            type: 'object',
+            properties: { category: { type: 'string' } },
+            required: ['category'],
+            additionalProperties: false,
+          },
+        },
+      },
+      messages: [{ role: 'user', content: "Hello world, what category is this: 'Maaşım azdır'" }],
     });
-    console.log("Success:", response.text);
+    const text = response.content.flatMap(b => (b.type === 'text' ? [b.text] : [])).join('');
+    console.log("Success:", text);
   } catch (e: any) {
     console.error("Error:", e.message);
   }

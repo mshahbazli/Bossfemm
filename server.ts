@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
-import { GoogleGenAI } from '@google/genai';
+import Anthropic from '@anthropic-ai/sdk';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
@@ -373,17 +372,45 @@ function calculateCompanyFemPS(company: any) {
 const app = express();
 app.use(express.json());
 
-// Initialize Gemini
-let ai: GoogleGenAI | null = null;
-if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'MY_GEMINI_API_KEY') {
-  ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  console.log("AI initialized with GEMINI_API_KEY");
+// Initialize Claude (Anthropic API). Reads ANTHROPIC_API_KEY from the environment.
+const AI_MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5-5';
+let ai: Anthropic | null = null;
+if (process.env.ANTHROPIC_API_KEY) {
+  ai = new Anthropic();
+  console.log(`AI initialized with Claude (${AI_MODEL})`);
 } else {
-  console.log("No GEMINI_API_KEY found in process.env");
+  console.log("No ANTHROPIC_API_KEY found in process.env");
 }
 
-// APIs
-app.get('/api/check-ai', (req, res) => res.json({ aiInitialized: !!ai, keyFound: !!process.env.GEMINI_API_KEY, key: process.env.GEMINI_API_KEY?.substring(0,4) }));
+// Ask Claude for a JSON object that matches `schema` (structured outputs).
+async function generateJSON<T = any>(prompt: string, schema: Record<string, unknown>): Promise<T> {
+  if (!ai) throw new Error('AI is not configured');
+  const response = await ai.beta.messages.create({
+    model: AI_MODEL,
+    max_tokens: 16000,
+    // If a safety classifier declines, the API retries on a recommended fallback model.
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
+    output_config: {
+      effort: 'low',
+      format: { type: 'json_schema', schema },
+    },
+    messages: [{ role: 'user', content: prompt }],
+  });
+  if (response.stop_reason === 'refusal') {
+    throw new Error(`Claude declined the request (${response.stop_details?.category ?? 'unknown'})`);
+  }
+  if (response.stop_reason === 'max_tokens') {
+    throw new Error('Claude response was truncated (max_tokens)');
+  }
+  const text = response.content
+    .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
+    .map(b => b.text)
+    .join('');
+  return JSON.parse(text) as T;
+}
+
+app.get('/api/check-ai', (req, res) => res.json({ aiInitialized: !!ai, model: AI_MODEL }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.get('/api/companies', (req, res) => {
@@ -452,27 +479,21 @@ Aşağıdakı şirkətin gender siyasətlərini və təcrübələrini dərindən
 Siyasət mətni:
 "${policiesText}"`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'OBJECT',
+      const response = await generateJSON(prompt, {
+            type: 'object',
+            additionalProperties: false,
             properties: {
-              score: { type: 'NUMBER', description: 'Policy score between 0 and 100' },
-              analysis: { type: 'STRING', description: 'Expert analysis verdict text' },
+              score: { type: 'number', description: 'Policy score between 0 and 100' },
+              analysis: { type: 'string', description: 'Expert analysis verdict text' },
               recommendations: {
-                type: 'ARRAY',
-                items: { type: 'STRING' },
+                type: 'array',
+                items: { type: 'string' },
                 description: 'List of actionable improvement recommendations'
               }
             },
             required: ['score', 'analysis']
-          }
-        }
-      });
-      const parsed = JSON.parse(response.text || '{}');
+          });
+      const parsed = response;
       if (typeof parsed.score === 'number') score = Math.min(100, Math.max(0, Math.round(parsed.score)));
       if (parsed.analysis) analysis = parsed.analysis;
       if (Array.isArray(parsed.recommendations) && parsed.recommendations.length > 0) {
@@ -986,19 +1007,13 @@ app.post('/api/personal-reviews', async (req, res) => {
   if (ai) {
     try {
       const prompt = `Analiz etdiyin rəy iş yoldaşları arasındakı anonim rəydir. Bunun etik qaydalara uyğun olub-olmadığını yoxla. Əgər təhqir, qeyri-etik sözlər, şəxsi həyata uyğun olmayan şərhlər varsa, 'unethical': true qoy. Həmçinin, rəyin kateqoriyasını təyin et (Məs: Gündəlik İş, Rəhbərlik, Təqdir, Kommunikasiya, İnkişaf). Rəy: "${text}"`;
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'OBJECT',
-            properties: { unethical: { type: 'BOOLEAN' }, reason: { type: 'STRING' }, category: { type: 'STRING' } },
+      const response = await generateJSON(prompt, {
+            type: 'object',
+            additionalProperties: false,
+            properties: { unethical: { type: 'boolean' }, reason: { type: 'string' }, category: { type: 'string' } },
             required: ['unethical']
-          }
-        }
-      });
-      const result = JSON.parse(response.text || '{}');
+          });
+      const result = response;
       if (result.unethical) {
         return res.status(400).json({ error: 'Sistem rəyinizi qeyri-etik hesab etdi və avtomatik sildi: ' + (result.reason || 'Təhqir/Etik qayda pozuntusu') });
       }
@@ -1050,34 +1065,27 @@ Bunu dərindən analiz et:
 2. Sentiment: positive, negative, neutral
 3. Red Flag: Əgər mobbing, cinsi ayrı-seçkilik, gender təzyiqi, maaş kəsilməsi və ya qanun pozuntusu varsa true, yoxsa false.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'OBJECT',
+      const response = await generateJSON(prompt, {
+            type: 'object',
+            additionalProperties: false,
             properties: {
               category: {
-                type: 'STRING',
+                type: 'string',
                 description: 'Qadın iş mühiti kateqoriyası'
               },
               sentiment: {
-                type: 'STRING',
+                type: 'string',
                 description: 'Birini seç: positive, negative, neutral'
               },
               redFlag: {
-                type: 'BOOLEAN',
+                type: 'boolean',
                 description: 'Ayrı-seçkilik, mobbing və ya ciddi qayda pozuntusu olduqda true'
               }
             },
             required: ['category', 'sentiment', 'redFlag']
-          }
-        }
-      });
+          });
 
-      const extracted = response.text || '';
-      const result = JSON.parse(extracted);
+      const result = response;
       category = result.category || category;
       sentiment = result.sentiment || sentiment;
       redFlag = result.redFlag || false;
@@ -1209,7 +1217,7 @@ app.post('/api/reviews/anonymous', async (req, res) => {
     lang === 'az' ? 'Şirkətin bərabərlik siyasətinin yenilənməsi və təsdiqi' : 'Review and align standard equity operating policy'
   ];
 
-  // Perform AI Triage via Gemini if available
+  // Perform AI Triage via Claude if available
   if (ai) {
     try {
       const prompt = `You are the specialized Bossfemm AI Agent responsible for triaging confidential workplace feedback from women employees.
@@ -1234,30 +1242,24 @@ Analyze with extreme sensitivity:
 5. Recommended Mitigation Steps (array of 2-3 actionable corporate solutions).
 Language: Respond in ${lang === 'az' ? 'Azerbaijani' : 'English'}.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'OBJECT',
+      const response = await generateJSON(prompt, {
+            type: 'object',
+            additionalProperties: false,
             properties: {
-              category: { type: 'STRING' },
-              riskLevel: { type: 'STRING', enum: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] },
-              riskScore: { type: 'INTEGER' },
-              redFlag: { type: 'BOOLEAN' },
-              aiExecutiveSummary: { type: 'STRING' },
+              category: { type: 'string' },
+              riskLevel: { type: 'string', enum: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] },
+              riskScore: { type: 'integer' },
+              redFlag: { type: 'boolean' },
+              aiExecutiveSummary: { type: 'string' },
               recommendedMitigationSteps: { 
-                type: 'ARRAY', 
-                items: { type: 'STRING' } 
+                type: 'array', 
+                items: { type: 'string' } 
               }
             },
             required: ['category', 'riskLevel', 'riskScore', 'redFlag', 'aiExecutiveSummary', 'recommendedMitigationSteps']
-          }
-        }
-      });
+          });
 
-      const parsed = JSON.parse(response.text || '{}');
+      const parsed = response;
       if (parsed.category) category = parsed.category;
       if (parsed.riskLevel) riskLevel = parsed.riskLevel;
       if (parsed.riskScore) riskScore = parsed.riskScore;
@@ -1267,7 +1269,7 @@ Language: Respond in ${lang === 'az' ? 'Azerbaijani' : 'English'}.`;
         recommendedMitigationSteps = parsed.recommendedMitigationSteps;
       }
     } catch (e) {
-      console.error('Gemini Triage Error:', e);
+      console.error('AI Triage Error:', e);
       // Smart heuristic fallback
       const lower = text.toLowerCase();
       if (lower.includes('maaş') || lower.includes('pay') || lower.includes('salary') || lower.includes('bonus')) {
@@ -1598,8 +1600,11 @@ app.get('/api/admin/all', (req, res) => {
   });
 });
 
+export default app;
+
 async function start() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -1610,10 +1615,13 @@ async function start() {
     app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'dist/index.html')));
   }
 
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
 
-start();
+// On Vercel the app is served by api/index.ts as a serverless function
+if (!process.env.VERCEL) {
+  start();
+}
